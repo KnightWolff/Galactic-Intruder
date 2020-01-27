@@ -38,13 +38,33 @@ public class Board extends JPanel implements ActionListener {
 
     public void checkCollisions(){
 
+        for(int i = bullets.size() -1; i>= 0; i--){
+            for(int j = 0; j<enemies.length; j++){
+                for(int k = 0; k<enemies[0].length; k++) {
+                    if(enemies[j][k] != null){
+                        if (bullets.get(i).getBounds().intersects(enemies[j][k].getBounds())){
+                            bullets.get(i).setRemove();
+                            enemies[j][k] = null;
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+            if(bullets.get(i).getRemove()){
+                bullets.remove(bullets.get(i));
+            }
+        }
+
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         //player.moveLeft();
         long currentTime = System.currentTimeMillis();
-
+        checkCollisions();
 
         if(game.isSpacePressed() == true && currentTime - bulletDelay>=250){
             bullets.add(new Bullet(player));
@@ -63,7 +83,7 @@ public class Board extends JPanel implements ActionListener {
             bullet.move();
         }
 
-        for(int i = bullets.size()-1; i > 0; i--){
+        for(int i = bullets.size()-1; i >= 0; i--){
             if(bullets.get(i).getY()  < 0){
                 bullets.remove(bullets.get(i));
             }
@@ -75,7 +95,9 @@ public class Board extends JPanel implements ActionListener {
         if(System.currentTimeMillis() - timeDelay >= 1000){
             for(int row = 0; row<5; row++){
                 for(int col = 0; col<10; col++){
-                    enemies[row][col].move();
+                    if(enemies[row][col] != null){
+                        enemies[row][col].move();
+                    }
                 }
             }
             timeDelay = System.currentTimeMillis();
@@ -91,7 +113,9 @@ public class Board extends JPanel implements ActionListener {
 
         for(int row = 0; row<5; row++){
             for(int col = 0; col<10; col++){
-                enemies[row][col].paint(g);
+               if (enemies[row][col] != null){
+                   enemies[row][col].paint(g);
+               }
             }
         }
         for(Bullet bullet: bullets){

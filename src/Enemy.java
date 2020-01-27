@@ -16,6 +16,10 @@ public class Enemy {
         this.y = y;
     }
 
+    public Rectangle getBounds(){
+        return new Rectangle(x,y,diam, diam);
+    }
+
     public void paint(Graphics g){
         g.setColor(Color.GREEN);
         g.fillOval(x,y,diam,diam);
